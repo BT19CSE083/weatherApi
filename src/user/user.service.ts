@@ -30,14 +30,16 @@ export class UserService {
         const cities = await this.cityModel.find().exec();
         console.log("cityyyyyyyyy",cities)
 
-        const weatherData = [];
+        // const weatherData = [];
   
-        for await(const city of cities) {
-          const cityWeather = await this.getWeatherByCity(city.name);
-          weatherData.push({ city: city.name, weather: cityWeather });
-        }
-  
-        return weatherData;
+        const weatherPromises = cities.map(city => {
+          return this.getWeatherByCity(city.name)
+              .then(cityWeather => ({ city: city.name, weather: cityWeather }))
+              .catch(error => ({ city: city.name, error: error.message }));
+      });
+
+      const weatherData = await Promise.all(weatherPromises);
+      return weatherData;
       } catch (error) {
         throw new Error('Failed to fetch weather data for all cities');
       }
