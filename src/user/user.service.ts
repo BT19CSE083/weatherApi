@@ -28,7 +28,7 @@ export class UserService {
   async getWeatherForAllCities() {
     try {
         const cities = await this.cityModel.find().exec();
-        console.log("cityyyyyyyyy",cities)
+        // console.log("cityyyyyyyyy",cities)
 
         // const weatherData = [];
   
